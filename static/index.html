@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI English Practice & Tools</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border-left-color: #ffffff;
+            animation: spin 1s ease infinite;
+            display: inline-block;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800">AI English Practice & Tools</h1>
+            <p class="text-lg text-gray-600 mt-2">Nâng cao kỹ năng tiếng Anh và hiệu suất công việc với Trí tuệ Nhân tạo</p>
+        </header>
+
+        <main class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Cột trái: Luyện nói IELTS -->
+            <div id="ielts-section" class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-bold mb-4 text-gray-800 border-b pb-2">Luyện nói IELTS Part 1</h2>
+                
+                <!-- Setup Form -->
+                <div id="setup-form">
+                    <div class="mb-4">
+                        <label for="student-name" class="block text-sm font-medium text-gray-700">Tên học viên:</label>
+                        <input type="text" id="student-name" name="student-name" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" value="Thí sinh">
+                    </div>
+                    <div class="mb-4">
+                        <label for="topic-select" class="block text-sm font-medium text-gray-700">Chọn chủ đề:</label>
+                        <select id="topic-select" name="topic" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                            <option>Work</option>
+                            <option>Study</option>
+                            <option>Hometown</option>
+                            <option>Technology</option>
+                            <option>Health</option>
+                            <option>Travel</option>
+                            <option>Movies</option>
+                            <option>Food</option>
+                        </select>
+                    </div>
+                    <button id="start-btn" class="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition duration-300">
+                        <span id="start-btn-text">Bắt đầu Luyện tập</span>
+                        <div id="start-spinner" class="spinner hidden"></div>
+                    </button>
+                </div>
+
+                <!-- Practice Area -->
+                <div id="practice-area" class="hidden mt-6">
+                    <div id="question-container" class="mb-4 p-4 bg-gray-50 rounded-md border">
+                        <p class="font-semibold text-gray-800" id="current-question"></p>
+                    </div>
+                    <div class="flex items-center justify-center space-x-4">
+                        <button id="record-btn" class="bg-red-500 text-white font-bold py-2 px-4 rounded-full hover:bg-red-600 transition duration-300">Ghi âm</button>
+                        <p id="timer" class="text-lg font-mono">00:00</p>
+                    </div>
+                    <p id="recording-status" class="text-center text-sm text-gray-500 mt-2"></p>
+                </div>
+                 <!-- Results Area -->
+                <div id="results-area" class="hidden mt-6 space-y-4"></div>
+                <button id="restart-btn" class="hidden w-full mt-6 bg-gray-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-600 transition duration-300">Luyện tập lại</button>
+
+            </div>
+
+            <!-- Cột phải: Các công cụ AI -->
+            <div class="space-y-8">
+                <!-- Dịch File -->
+                <div id="translate-section" class="bg-white p-6 rounded-lg shadow-lg">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800 border-b pb-2">Dịch File (Văn bản & Ảnh)</h2>
+                    <p class="mb-4 text-gray-600">Tải lên file .txt, .docx, hoặc ảnh (.png, .jpg) để trích xuất và dịch nội dung sang tiếng Việt.</p>
+                    <div class="flex flex-col space-y-4">
+                        <input type="file" id="file-input" accept=".txt,.docx,image/png,image/jpeg,image/webp" class="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"/>
+                        <button id="translate-btn" class="bg-purple-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-purple-600 transition duration-300 disabled:bg-gray-400">
+                             <span id="translate-btn-text">Dịch File</span>
+                             <div id="translate-spinner" class="spinner hidden"></div>
+                        </button>
+                        <div id="translate-result-container" class="hidden mt-4 space-y-4">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-700">Nội dung gốc:</h3>
+                                <textarea id="original-text" rows="5" class="mt-1 w-full p-2 bg-gray-50 rounded-md border" readonly></textarea>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-700">Bản dịch tiếng Việt:</h3>
+                                <textarea id="translated-text" rows="5" class="mt-1 w-full p-2 bg-gray-50 rounded-md border" readonly></textarea>
+                            </div>
+                            <div id="translate-error" class="mt-2 p-4 bg-red-100 text-red-700 rounded-md hidden"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chức năng mới: Chuyển Âm thanh thành Văn bản -->
+                <div id="transcribe-section" class="bg-white p-6 rounded-lg shadow-lg">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800 border-b pb-2">Chuyển Âm thanh thành Văn bản</h2>
+                    <p class="mb-4 text-gray-600">Tải lên một file âm thanh (MP3, M4A, WAV, WEBM...) để chuyển đổi thành văn bản bằng Azure AI.</p>
+                    <div class="flex flex-col space-y-4">
+                        <input type="file" id="audio-file-input" accept="audio/*" class="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100"/>
+                        <button id="transcribe-audio-btn" class="bg-teal-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-teal-600 transition duration-300 disabled:bg-gray-400">
+                            <span id="transcribe-audio-btn-text">Bắt đầu Chuyển đổi</span>
+                            <div id="transcribe-audio-spinner" class="spinner hidden"></div>
+                        </button>
+                        <div id="transcribe-audio-result-container" class="hidden mt-4">
+                            <h3 class="text-lg font-semibold text-gray-700">Kết quả:</h3>
+                            <div class="mt-2 p-4 bg-gray-50 rounded-md border">
+                                <p id="transcribe-audio-result" class="text-gray-800 whitespace-pre-wrap"></p>
+                            </div>
+                            <div id="transcribe-audio-error" class="mt-2 p-4 bg-red-100 text-red-700 rounded-md hidden"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // ... (IELTS Script - no changes)
+            const startBtn = document.getElementById('start-btn');
+            const setupForm = document.getElementById('setup-form');
+            const practiceArea = document.getElementById('practice-area');
+            const resultsArea = document.getElementById('results-area');
+            const restartBtn = document.getElementById('restart-btn');
+            const topicSelect = document.getElementById('topic-select');
+            const currentQuestionEl = document.getElementById('current-question');
+            const recordBtn = document.getElementById('record-btn');
+            const timerEl = document.getElementById('timer');
+            const recordingStatusEl = document.getElementById('recording-status');
+            const startBtnText = document.getElementById('start-btn-text');
+            const startSpinner = document.getElementById('start-spinner');
+
+            let mediaRecorder;
+            let audioChunks = [];
+            let timerInterval;
+            let seconds = 0;
+            let questions = [];
+            let currentQuestionIndex = 0;
+
+            startBtn.addEventListener('click', async () => {
+                startBtn.disabled = true;
+                startBtnText.classList.add('hidden');
+                startSpinner.classList.remove('hidden');
+
+                try {
+                    const topic = topicSelect.value;
+                    const formData = new FormData();
+                    formData.append('topic', topic);
+                    const response = await fetch('/get-ielts-questions', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const data = await response.json();
+                    if (!response.ok) throw new Error(data.error || 'Failed to get questions.');
+
+                    questions = data.questions;
+                    currentQuestionIndex = 0;
+                    resultsArea.innerHTML = '';
+                    resultsArea.classList.add('hidden');
+                    setupForm.classList.add('hidden');
+                    practiceArea.classList.remove('hidden');
+                    restartBtn.classList.add('hidden');
+                    displayQuestion();
+                } catch (error) {
+                    alert(`Error: ${error.message}`);
+                } finally {
+                    startBtn.disabled = false;
+                    startBtnText.classList.remove('hidden');
+                    startSpinner.classList.add('hidden');
+                }
+            });
+
+            function displayQuestion() {
+                if (currentQuestionIndex < questions.length) {
+                    currentQuestionEl.textContent = `Câu ${currentQuestionIndex + 1}: ${questions[currentQuestionIndex]}`;
+                    recordBtn.disabled = false;
+                    recordBtn.textContent = "Ghi âm";
+                    recordBtn.classList.replace('bg-green-500', 'bg-red-500');
+                    recordBtn.classList.replace('hover:bg-green-600', 'hover:bg-red-600');
+                } else {
+                    practiceArea.classList.add('hidden');
+                    restartBtn.classList.remove('hidden');
+                }
+            }
+
+            recordBtn.addEventListener('click', () => {
+                if (mediaRecorder && mediaRecorder.state === 'recording') {
+                    stopRecording();
+                } else {
+                    startRecording();
+                }
+            });
+
+            async function startRecording() {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+                    mediaRecorder.ondataavailable = event => {
+                        audioChunks.push(event.data);
+                    };
+                    mediaRecorder.onstop = processAudio;
+                    mediaRecorder.start();
+
+                    recordBtn.textContent = 'Dừng';
+                    recordBtn.classList.replace('bg-red-500', 'bg-green-500');
+                    recordBtn.classList.replace('hover:bg-red-600', 'hover:bg-green-600');
+                    recordingStatusEl.textContent = "Đang ghi âm...";
+                    startTimer();
+                } catch (error) {
+                    alert('Could not access microphone. Please allow microphone permissions.');
+                    console.error('Error starting recording:', error);
+                }
+            }
+            
+            function stopRecording() {
+                if (mediaRecorder) {
+                    mediaRecorder.stop();
+                    recordBtn.disabled = true;
+                    recordingStatusEl.textContent = "Đang xử lý...";
+                    stopTimer();
+                }
+            }
+            
+            async function processAudio() {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                const formData = new FormData();
+                formData.append('question', questions[currentQuestionIndex]);
+                formData.append('audio_file', audioBlob, 'recording.webm');
+
+                try {
+                    const response = await fetch('/analyze-answer', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const result = await response.json();
+                     if (!response.ok) throw new Error(result.error || 'Failed to analyze answer.');
+                    displayResult(result);
+                } catch (error) {
+                    alert(`Error analyzing answer: ${error.message}`);
+                } finally {
+                    recordingStatusEl.textContent = "";
+                    currentQuestionIndex++;
+                    displayQuestion();
+                }
+            }
+             function displayResult(result) {
+                resultsArea.classList.remove('hidden');
+                const resultCard = `
+                    <div class="p-4 border rounded-lg bg-gray-50">
+                        <p class="font-semibold text-gray-700">Câu hỏi: ${questions[currentQuestionIndex]}</p>
+                        <p class="mt-2 italic text-gray-800">" ${result.user_transcription} "</p>
+                        ${result.audio_url ? `<audio controls src="${result.audio_url}" class="w-full mt-2"></audio>`: ''}
+                        <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                            <h4 class="font-bold text-blue-800">Đánh giá (Điểm: ${result.score || 'N/A'})</h4>
+                            <p class="text-sm text-blue-700">${result.feedback}</p>
+                        </div>
+                        <div class="mt-3 p-3 bg-green-50 border border-green-200 rounded-md">
+                            <h4 class="font-bold text-green-800">Gợi ý trả lời (Band 9)</h4>
+                            <p class="text-sm text-green-700">${result.model_answer}</p>
+                        </div>
+                    </div>
+                `;
+                resultsArea.innerHTML += resultCard;
+            }
+
+            function startTimer() {
+                seconds = 0;
+                timerEl.textContent = '00:00';
+                timerInterval = setInterval(() => {
+                    seconds++;
+                    const min = String(Math.floor(seconds / 60)).padStart(2, '0');
+                    const sec = String(seconds % 60).padStart(2, '0');
+                    timerEl.textContent = `${min}:${sec}`;
+                }, 1000);
+            }
+
+            function stopTimer() {
+                clearInterval(timerInterval);
+            }
+
+            restartBtn.addEventListener('click', () => {
+                setupForm.classList.remove('hidden');
+                practiceArea.classList.add('hidden');
+                resultsArea.classList.add('hidden');
+                restartBtn.classList.add('hidden');
+                resultsArea.innerHTML = '';
+            });
+
+            // --- Translate File Script ---
+            const translateBtn = document.getElementById('translate-btn');
+            const fileInput = document.getElementById('file-input');
+            const translateResultContainer = document.getElementById('translate-result-container');
+            const originalTextEl = document.getElementById('original-text');
+            const translatedTextEl = document.getElementById('translated-text');
+            const translateErrorEl = document.getElementById('translate-error');
+            const translateBtnText = document.getElementById('translate-btn-text');
+            const translateSpinner = document.getElementById('translate-spinner');
+
+            translateBtn.addEventListener('click', async () => {
+                const file = fileInput.files[0];
+                if (!file) {
+                    alert('Vui lòng chọn một file.');
+                    return;
+                }
+                
+                translateBtn.disabled = true;
+                translateBtnText.classList.add('hidden');
+                translateSpinner.classList.remove('hidden');
+                translateResultContainer.classList.add('hidden');
+                translateErrorEl.classList.add('hidden');
+
+                const formData = new FormData();
+                formData.append('file', file);
+
+                try {
+                    const response = await fetch('/translate-file', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const result = await response.json();
+                    if (response.ok) {
+                        originalTextEl.value = result.original_text;
+                        translatedTextEl.value = result.translated_text;
+                        translateResultContainer.classList.remove('hidden');
+                    } else {
+                        translateErrorEl.textContent = `Lỗi: ${result.error || 'Không thể dịch file.'}`;
+                        translateErrorEl.classList.remove('hidden');
+                    }
+                } catch (error) {
+                    console.error('Error translating file:', error);
+                    translateErrorEl.textContent = 'Đã xảy ra lỗi không mong muốn. Vui lòng kiểm tra console.';
+                    translateErrorEl.classList.remove('hidden');
+                } finally {
+                    translateBtn.disabled = false;
+                    translateBtnText.classList.remove('hidden');
+                    translateSpinner.classList.add('hidden');
+                }
+            });
+            
+            // --- NEW: Transcribe Audio Script ---
+            const transcribeAudioBtn = document.getElementById('transcribe-audio-btn');
+            const transcribeAudioInput = document.getElementById('audio-file-input');
+            const transcribeAudioResultContainer = document.getElementById('transcribe-audio-result-container');
+            const transcribeAudioResultEl = document.getElementById('transcribe-audio-result');
+            const transcribeAudioErrorEl = document.getElementById('transcribe-audio-error');
+            const transcribeAudioBtnText = document.getElementById('transcribe-audio-btn-text');
+            const transcribeAudioSpinner = document.getElementById('transcribe-audio-spinner');
+
+
+            transcribeAudioBtn.addEventListener('click', async () => {
+                const file = transcribeAudioInput.files[0];
+                if (!file) {
+                    alert('Vui lòng chọn một file âm thanh.');
+                    return;
+                }
+
+                transcribeAudioBtn.disabled = true;
+                transcribeAudioBtnText.classList.add('hidden');
+                transcribeAudioSpinner.classList.remove('hidden');
+                transcribeAudioResultContainer.classList.add('hidden');
+                transcribeAudioErrorEl.classList.add('hidden');
+
+                const formData = new FormData();
+                formData.append('audio_file', file);
+
+                try {
+                    const response = await fetch('/transcribe-audio', {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        transcribeAudioResultEl.textContent = result.transcription;
+                        transcribeAudioResultContainer.classList.remove('hidden');
+                    } else {
+                        transcribeAudioErrorEl.textContent = `Lỗi: ${result.error || 'Không thể chuyển đổi file.'}`;
+                        transcribeAudioErrorEl.classList.remove('hidden');
+                    }
+                } catch (error) {
+                    console.error('Error transcribing audio:', error);
+                    transcribeAudioErrorEl.textContent = 'Đã xảy ra lỗi không mong muốn. Vui lòng kiểm tra console.';
+                    transcribeAudioErrorEl.classList.remove('hidden');
+                } finally {
+                    transcribeAudioBtn.disabled = false;
+                    transcribeAudioBtnText.classList.remove('hidden');
+                    transcribeAudioSpinner.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

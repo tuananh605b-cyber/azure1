@@ -1,0 +1,21 @@
+
+fastapi
+uvicorn[standard]
+
+#Google Generative AI
+google-generativeai==0.8.5
+google-api-python-client==2.182.0
+google-auth==2.40.3
+protobuf==5.29.5
+
+#Azure Cognitive Services
+azure-cognitiveservices-speech
+azure-cognitiveservices-vision-computervision==0.9.0 # Thư viện mới cho Vision
+msrestazure==0.6.4 # Phụ thuộc của Azure SDK
+
+#File Processing
+python-docx
+Pillow
+
+#Utilities
+python-dotenv

@@ -1,0 +1,29 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# IDE/editor
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Audio và file tạm
+*.wav
+*.webm
+*.mp3
+*.tmp
+
+# Env file
+.env
+
+.env
+.env
